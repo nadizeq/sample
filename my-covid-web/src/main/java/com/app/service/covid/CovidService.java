@@ -9,9 +9,9 @@ public interface CovidService {
 
 	List<CovidCasesArea> getCovid();
 
-	List<CovidCasesArea> addCovid();
-
 	List<CovidCasesDesc> getCovidDesc();
+
+	CovidCasesDesc addCovid(String desc);
 
 
 }

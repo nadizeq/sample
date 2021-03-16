@@ -2,6 +2,7 @@ package com.app.service.covid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,18 +77,47 @@ public class CovidServiceImpl implements CovidService {
 	
 	// TODO: Related to Practical 4 (Add)
 	@Override
-	public List<CovidCasesArea> addCovid() {
+	public CovidCasesDesc addCovid(String desc) {
 		log.info("addCovid started");
 
-		return null;
+		CovidCasesDesc covidCasesDesc = null;
+		CovidCasesDescEntity covidAreaDescEntity = new CovidCasesDescEntity();
+
+		covidAreaDescEntity.setDescription(desc);
+
+		CovidCasesDescEntity savedEntity = covidCasesDescRepository.save(covidAreaDescEntity);
+
+		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
+
+		covidCasesDesc = mapper.asResource(savedEntity);
+
+		return covidCasesDesc;
 
 	}
 
 	// TODO: Related to Practical 4 (Delete)
-	public List<CovidCasesArea> deleteCovid() {
+	public int deleteCovid(Long id) throws Exception {
 		log.info("deleteCovid started");
+		
+		try {
 
-		return null;
+			Optional<CovidCasesDescEntity> entityOptional = covidCasesDescRepository.findById(id);
+
+			log.info("Entity found == " + entityOptional.isPresent());
+
+			if (entityOptional.isPresent()) {
+				CovidCasesDescEntity covidAreaDescEntity = entityOptional.get();
+				covidCasesDescRepository.delete(covidAreaDescEntity);
+				return 1;
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.error("deleteCovid() exception " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+		
+		return 0;
 
 	}
 }
