@@ -3,6 +3,7 @@ package com.app.repository.covid;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,6 +19,8 @@ public interface CovidCasesRepository extends JpaRepository<CovidCasesAreaEntity
 	//List<CovidCasesAreaEntity> listLast5Records();
 	
 	@Query("SELECT c FROM CovidCasesAreaEntity AS c order by date desc")	
-	List<CovidCasesAreaEntity> listLast5RecordsHQL();
+	List<CovidCasesAreaEntity> listLast5RecordsHQLWithSize(org.springframework.data.domain.Pageable page);
+	//List<CovidCasesAreaEntity> listLast5RecordsHQL();//this line is used for bonus practical part 2
+	
 	
 }

@@ -22,7 +22,7 @@ public class MyCovidController {
 	@Autowired
 	CovidMiningAPITotalCases covidMiningAPITotalCases;
 
-	@GetMapping(MINING_MY_COVID)
+	/*@GetMapping(MINING_MY_COVID)
 	String mining() throws Exception {
 		log.info("mining() started");
 		String strReturn = null;
@@ -38,7 +38,7 @@ public class MyCovidController {
 
 		log.info(MINING_MY_COVID + " return = {}" + strReturn);
 		return strReturn;
-	}
+	}*/
 
 	@GetMapping(GET_MY_LAST_5_COVID)
 	List<CovidCasesArea> getLast5Records() throws Exception {
