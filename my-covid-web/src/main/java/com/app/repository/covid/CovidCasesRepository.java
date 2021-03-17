@@ -12,8 +12,12 @@ public interface CovidCasesRepository extends JpaRepository<CovidCasesAreaEntity
 
 	@Query(value = "SELECT DISTINCT c.date, c.cases, c.id, c.fk_area_id FROM trx_covid_cases AS c order by date desc LIMIT 2", nativeQuery = true)
 	List<CovidCasesAreaEntity> listLast2Records();
-
-	@Query(value = "SELECT DISTINCT c.date, c.cases, c.id, c.fk_area_id FROM trx_covid_cases AS c order by date desc LIMIT 5", nativeQuery = true)
-	List<CovidCasesAreaEntity> listLast5Records();
+	
+	//Two lines are commented because it is only useful for database using pgadmin
+	//@Query(value = "SELECT DISTINCT c.date, c.cases, c.id, c.fk_area_id FROM trx_covid_cases AS c order by date desc LIMIT 5", nativeQuery = true)
+	//List<CovidCasesAreaEntity> listLast5Records();
+	
+	@Query("SELECT c FROM CovidCasesAreaEntity AS c order by date desc")	
+	List<CovidCasesAreaEntity> listLast5RecordsHQL();
 	
 }

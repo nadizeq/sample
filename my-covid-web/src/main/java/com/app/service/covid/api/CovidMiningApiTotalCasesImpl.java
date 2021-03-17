@@ -8,14 +8,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.app.mapper.CovidCasesAreaMapper;
-import com.app.repository.covid.CovidCasesRepository;
 import com.app.entity.CovidCasesAreaEntity;
+import com.app.mapper.CovidCasesAreaMapper;
 import com.app.model.CovidCasesArea;
 import com.app.model.api.Covid19ApiModel;
+import com.app.repository.covid.CovidCasesRepository;
 import com.app.util.DateTools;
 import com.app.util.ResffulServices;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -27,6 +31,7 @@ import fr.xebia.extras.selma.Selma;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Transactional
 @Slf4j
 public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 
@@ -87,7 +92,7 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 
 	private void updateDB(List<Covid19ApiModel> covid19ApiModels) throws ParseException {
 
-		List<CovidCasesAreaEntity> covidCasesAreaEntities = covidCasesRepository.listLast5Records();
+		List<CovidCasesAreaEntity> covidCasesAreaEntities = covidCasesRepository.listLast5RecordsHQL();
 
 		for (Covid19ApiModel covid19ApiModel : covid19ApiModels) {
 			covid19ApiModel.getDate();
@@ -160,7 +165,8 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 	@Override
 	public List<CovidCasesArea> getLast5RecordsMY() throws Exception {
 		// TODO Auto-generated method stub
-		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast5Records();
+
+		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast5RecordsHQL();
 
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
 
@@ -170,8 +176,30 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 			casesPojos.add(covidCasesArea);
 		}
 
-		log.info("getLast5RecordsMY ends.  cases = {} ", casesPojos);
+		log.info("getLast5RecordsMY ends.");
+
 		return casesPojos;
+	}
+
+	@Override
+	public List<CovidCasesArea> getLast5RecordsMYWithSize(int size) throws Exception {
+		// TODO Auto-generated method stub
+
+		// TODO: Practical bonus 3:
+
+		Pageable page = PageRequest.of(0, size);
+		// List<CovidCasesAreaEntity> list =
+		// covidCasesRepository.listLast5RecordsHQL(page);
+
+		// complete the code here as getLast5RecordsMY method
+		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+
+		if (casesPojos.size() == 0) {
+			throw new Exception("query return nothing!");
+		}
+		
+		log.info("getLast5RecordsMYWithSize ends.");
+		return null;
 	}
 
 	@Override
@@ -179,7 +207,7 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		log.info("getTotalfromDB starts. ");
 		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast2Records();
 		log.info("getTotalfromDB casesEntities size ={} ", casesEntities.size());
-		
+
 		int totalCases = 0;
 		String date = "";
 		if (!casesEntities.isEmpty()) {
@@ -203,9 +231,7 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 			totalCases = getCasesDifferent(covidApiModels);
 		}
 
-		
-		
-		log.info("getTotalfromDB ends.  totalCases = {} date={}", totalCases,date);
+		log.info("getTotalfromDB ends.  totalCases = {} date={}", totalCases, date);
 		return "Total Cases " + totalCases + " (" + date + ")";
 	}
 }
