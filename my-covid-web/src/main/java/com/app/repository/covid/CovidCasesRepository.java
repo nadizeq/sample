@@ -18,9 +18,10 @@ public interface CovidCasesRepository extends JpaRepository<CovidCasesAreaEntity
 	//@Query(value = "SELECT DISTINCT c.date, c.cases, c.id, c.fk_area_id FROM trx_covid_cases AS c order by date desc LIMIT 5", nativeQuery = true)
 	//List<CovidCasesAreaEntity> listLast5Records();
 	
-	@Query("SELECT c FROM CovidCasesAreaEntity AS c order by date desc")	
-	List<CovidCasesAreaEntity> listLast5RecordsHQLWithSize(org.springframework.data.domain.Pageable page);
-	//List<CovidCasesAreaEntity> listLast5RecordsHQL();//this line is used for bonus practical part 2
-	
+	@Query("SELECT c FROM CovidCasesAreaEntity AS c order by date asc")	
+	List<CovidCasesAreaEntity> listLast5RecordsHQLWithSize(org.springframework.data.domain.Pageable page);//bonus practical part 3
+
+	@Query("SELECT c FROM CovidCasesAreaEntity AS c order by date asc")	
+	List<CovidCasesAreaEntity> listLast5RecordsHQL(); //this line is used for bonus practical part 2
 	
 }

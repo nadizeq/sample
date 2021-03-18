@@ -13,5 +13,4 @@ public interface CovidService {
 
 	CovidCasesDesc addCovid(String desc);
 
-
 }

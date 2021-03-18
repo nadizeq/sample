@@ -117,7 +117,8 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 	public List<CovidCasesArea> getLast5RecordsMY() throws Exception {
 		// TODO Auto-generated method stub
 
-		Pageable page = PageRequest.of(0, 2);
+		/* The commented code is used to try for part 3
+		 Pageable page = PageRequest.of(0, 2);
 		List<CovidCasesAreaEntity> list =covidCasesRepository.listLast5RecordsHQLWithSize(page);
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
 
@@ -129,7 +130,22 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 
 		log.info("getLast5RecordsMY ends.");
 
+		return casesPojos;*/
+		
+		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast5RecordsHQL();
+
+		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
+
+		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+		for (CovidCasesAreaEntity covidCasesAreaEntity : casesEntities) {
+			CovidCasesArea covidCasesArea = mapper.asResource(covidCasesAreaEntity);
+			casesPojos.add(covidCasesArea);
+		}
+
+		log.info("getLast5RecordsMY ends.");
+
 		return casesPojos;
+		
 	}
 
 	@Override
@@ -143,14 +159,22 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		// covidCasesRepository.listLast5RecordsHQL(page);
 
 		// complete the code here as getLast5RecordsMY method
+		Pageable page = PageRequest.of(0, 2);
+		List<CovidCasesAreaEntity> list =covidCasesRepository.listLast5RecordsHQLWithSize(page);
+		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
+
 		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+		for (CovidCasesAreaEntity covidCasesAreaEntity : list) {
+			CovidCasesArea covidCasesArea = mapper.asResource(covidCasesAreaEntity);
+			casesPojos.add(covidCasesArea);
+		}
 
 		if (casesPojos.size() == 0) {
 			throw new Exception("query return nothing!");
 		}
 		
 		log.info("getLast5RecordsMYWithSize ends.");
-		return null;
+		return casesPojos;
 	}
 
 	@Override
