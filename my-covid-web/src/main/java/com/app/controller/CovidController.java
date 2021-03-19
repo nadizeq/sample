@@ -1,7 +1,6 @@
 package com.app.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,11 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.entity.CovidCasesDescEntity;
 import com.app.model.CovidCasesArea;
 import com.app.model.CovidCasesDesc;
-import com.app.repository.covid.CovidCasesDescRepository;
-import com.app.repository.covid.CovidCasesRepository;
 import com.app.service.covid.CovidService;
 import com.app.service.covid.CovidServiceImpl;
 import com.app.service.covid.api.CovidMiningAPITotalCases;
@@ -40,12 +36,6 @@ public class CovidController {
 
 	@Autowired
 	private CovidService covidService;
-
-	@Autowired
-	private CovidCasesRepository covidCasesRepository;
-
-	@Autowired
-	private CovidCasesDescRepository covidCasesDescRepository;
 	
 	@Autowired
 	private CovidServiceImpl covidServiceImpl;
@@ -72,7 +62,7 @@ public class CovidController {
 
 	@GetMapping(GET_COVID_DESC)
 	List<CovidCasesDesc> findAllDesc() throws Exception {
-		log.info("findAll() started");
+		log.info("CovidCasesDesc - findAllDesc() function started");
 		List<CovidCasesDesc> covidCasesdescs = null;
 		try {
 			covidCasesdescs = covidService.getCovidDesc();

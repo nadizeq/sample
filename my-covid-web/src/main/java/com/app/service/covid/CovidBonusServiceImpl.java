@@ -33,7 +33,6 @@ public class CovidBonusServiceImpl implements CovidBonusService {
 	@Override
 	public
 	List<CovidCasesBonus> bonus() throws Exception {
-		//List<CovidCasesBonus> CovidCasesBonus = null;
 		log.info("bonus() started");
 		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
 		List<CovidCasesBonusEntity> covidCaseBonusEntities = covidCasesBonusRepository.findAll();
@@ -45,11 +44,12 @@ public class CovidBonusServiceImpl implements CovidBonusService {
 			for (CovidCasesBonusEntity entity : covidCaseBonusEntities) {
 				CovidCasesBonus model = mapper.asResource(entity);
 				covidCasesBonusList.add(model);
-				log.info("entity total desc={}", entity.getDescription());
+				log.info("entity description={}", entity.getDescription());
 			}
-			log.info(" CovidCasesBonus() return Size={}", covidCaseBonusEntities.size());
+			log.info(" CovidCasesBonusEntities() return Size={}", covidCaseBonusEntities.size());
 		}
 		log.info("bonus() ends");
 		return covidCasesBonusList;
+		
 	}
 }
