@@ -1,9 +1,7 @@
 package com.app.mapper;
 
 import com.app.entity.CovidCasesBonusEntity;
-import com.app.entity.CovidCasesDescEntity;
 import com.app.model.CovidCasesBonus;
-import com.app.model.CovidCasesDesc;
 
 import fr.xebia.extras.selma.IgnoreMissing;
 import fr.xebia.extras.selma.Mapper;

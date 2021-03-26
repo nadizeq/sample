@@ -5,15 +5,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.entity.CovidCasesDescEntity;
+import com.app.mapper.CovidAreaDescMapper;
 import com.app.model.CovidCasesArea;
 import com.app.model.CovidCasesDesc;
+import com.app.repository.covid.CovidCasesDescRepository;
 import com.app.service.covid.CovidService;
 import com.app.service.covid.CovidServiceImpl;
 import com.app.service.covid.api.CovidMiningAPITotalCases;
 
+import fr.xebia.extras.selma.Selma;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -33,15 +40,21 @@ public class CovidController {
 	private final static String GET_HELLO_API = "/covid/hello";
 
 	private final static String GET_LOG_API = "/covid/logging";
+	
+	private final static String PUT_API="/covid/put";
+	
+	private final static String POST_API="/covid/post";
+	
+	private final static String DELETE_COVID_SOAPUI="/covid/deletesoap";
 
 	@Autowired
 	private CovidService covidService;
 	
 	@Autowired
-	private CovidServiceImpl covidServiceImpl;
+	CovidMiningAPITotalCases covidMiningAPITotalCases;
 	
 	@Autowired
-	CovidMiningAPITotalCases covidMiningAPITotalCases;
+	CovidCasesDescRepository covidCasesDescRepository;
 
 	@GetMapping(GET_LATEST_COVID_FROM_DB)
 	String getLatest() throws Exception {
@@ -147,7 +160,33 @@ public class CovidController {
 	@DeleteMapping(DELETE_COVID)
 	int deleteCovid(@RequestParam(required = true) long id) throws Exception {
 		log.info("deleteCovid() started id={}", id);
-
-		return covidServiceImpl.deleteCovid(id);
+		try {
+			return covidService.deleteCovid(id);
+			
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.error("add() exception " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+		
 	}
+	
+	@PutMapping(PUT_API)
+	CovidCasesDesc putCovid(@RequestBody CovidCasesDesc covidCasesDesc) throws Exception {
+
+	return covidService.putCovid(covidCasesDesc);
+	}
+	
+    @PostMapping(POST_API)
+    public CovidCasesDesc postCovid(@RequestBody CovidCasesDesc covidCasesDesc) throws Exception {
+		
+    	return covidService.postCovid(covidCasesDesc);
+    	
+    }
+    
+    @DeleteMapping(DELETE_COVID_SOAPUI)
+    public List<CovidCasesDesc>deleteCovidSoap(@RequestParam(required = true) String desc)throws Exception{
+		return covidService.deleteCovidDesc(desc);
+	}
+
 }

@@ -20,6 +20,7 @@ import com.app.model.CovidCasesArea;
 import com.app.model.CovidCasesDesc;
 
 import fr.xebia.extras.selma.Selma;
+import jdk.internal.org.jline.utils.Log;
 
 @Service
 @Transactional
@@ -98,6 +99,7 @@ public class CovidServiceImpl implements CovidService {
 	}
 
 	// TODO: Related to Practical 4 (Delete)
+	@Override
 	public int deleteCovid(Long id) throws Exception {
 		log.info("deleteCovid started");
 		
@@ -121,5 +123,69 @@ public class CovidServiceImpl implements CovidService {
 		
 		return 0;
 
+	}
+	
+	@Override
+	public CovidCasesDesc putCovid(CovidCasesDesc covidCasesDesc) throws Exception {
+		log.info("putCovid() started, covidCasesDesc={}", covidCasesDesc);
+		try {
+			CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
+
+			CovidCasesDescEntity covidCasesDescEntity= mapper.asEntity(covidCasesDesc);
+			CovidCasesDescEntity savedEntity = covidCasesDescRepository.save(covidCasesDescEntity);
+			covidCasesDesc = mapper.asResource(savedEntity);
+			
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.error("deleteCovid() exception " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+
+		log.info("putCovid() ends, covidCasesDescSaved={}", covidCasesDesc);
+		return covidCasesDesc;
+		
+	}
+	@Override
+	public CovidCasesDesc postCovid(CovidCasesDesc covidCasesDesc) throws Exception{
+		log.info("postCovid() starts, covidCasesDesc={}",covidCasesDesc);
+		try {
+			CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
+	    	CovidCasesDescEntity covidCasesDescEntity= mapper.asEntity(covidCasesDesc);
+	    	CovidCasesDescEntity savedEntity = covidCasesDescRepository.save(covidCasesDescEntity);
+	    	covidCasesDesc = mapper.asResource(savedEntity);
+			
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			log.error("deleteCovid() exception " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+		log.info("postCovid() end, covidCasesDesc={}",covidCasesDesc);
+    	return covidCasesDesc;
+		
+	}
+	
+	@Override
+	public List<CovidCasesDesc> deleteCovidDesc(String desc) throws Exception{
+		
+		log.info("deleteCovidSoap() started desc={}", desc);
+		covidCasesDescRepository.deleteDescWithCondition(desc);
+		
+		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
+		List<CovidCasesDescEntity> covidCaseDescEntities = covidCasesDescRepository.findAll();
+		List<CovidCasesDesc> covidCasesDescList = new ArrayList<CovidCasesDesc>();
+		if (covidCaseDescEntities == null) {
+			throw new IDNotFoundException(0L);
+		} else {
+
+			for (CovidCasesDescEntity entity : covidCaseDescEntities) {
+				CovidCasesDesc model = mapper.asResource(entity);
+				covidCasesDescList.add(model);
+				log.info("entity total desc={}", entity.getDescription());
+			}
+			log.info(" getCovidDesc() return Size={}", covidCaseDescEntities.size());
+		}
+
+		return covidCasesDescList;
+				
 	}
 }
