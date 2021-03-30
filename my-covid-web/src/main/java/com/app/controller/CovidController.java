@@ -46,6 +46,8 @@ public class CovidController {
 	private final static String POST_API="/covid/post";
 	
 	private final static String DELETE_COVID_SOAPUI="/covid/deletesoap";
+	
+	//private final static String DELETE_DUPLICATE="/covid";
 
 	@Autowired
 	private CovidService covidService;
@@ -73,6 +75,7 @@ public class CovidController {
 		return returnString;
 	}
 
+	//retrieve data from the table trx_covid_case
 	@GetMapping(GET_COVID_DESC)
 	List<CovidCasesDesc> findAllDesc() throws Exception {
 		log.info("CovidCasesDesc - findAllDesc() function started");

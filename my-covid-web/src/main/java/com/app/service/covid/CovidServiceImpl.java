@@ -20,7 +20,6 @@ import com.app.model.CovidCasesArea;
 import com.app.model.CovidCasesDesc;
 
 import fr.xebia.extras.selma.Selma;
-import jdk.internal.org.jline.utils.Log;
 
 @Service
 @Transactional
@@ -84,11 +83,11 @@ public class CovidServiceImpl implements CovidService {
 		log.info("addCovid started");
 
 		CovidCasesDesc covidCasesDesc = null;
-		CovidCasesDescEntity covidAreaDescEntity = new CovidCasesDescEntity();
+		CovidCasesDescEntity covidCasesDescEntity = new CovidCasesDescEntity();
 
-		covidAreaDescEntity.setDescription(desc);
+		covidCasesDescEntity.setDescription(desc);
 
-		CovidCasesDescEntity savedEntity = covidCasesDescRepository.save(covidAreaDescEntity);
+		CovidCasesDescEntity savedEntity = covidCasesDescRepository.save(covidCasesDescEntity);
 
 		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
 
