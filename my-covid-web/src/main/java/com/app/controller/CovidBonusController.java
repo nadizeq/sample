@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.model.CovidCasesBonus;
-import com.app.model.CovidCasesDesc;
-import com.app.repository.covid.CovidCasesBonusRepository;
-import com.app.repository.covid.CovidCasesDescRepository;
 import com.app.service.covid.CovidBonusService;
 import com.app.service.covid.api.CovidMiningAPITotalCases;
 
@@ -35,15 +32,16 @@ public class CovidBonusController {
 	private final static String POST_API_BONUS = "/covid/post/bonus";
 	
 	private final static String DELETE_COVID_SOAPUI_BONUS="/covid/deletesoap/bonus";
+	
+	private final static String DELETE_DUPLICATE="/covid/deleteduplicate/bonus";
+
 
 	@Autowired
 	CovidBonusService covidBonusService;
 	
 	@Autowired
 	CovidMiningAPITotalCases covidMiningAPITotalCases;
-	
-	@Autowired
-	CovidCasesBonusRepository covidCasesBonusRepository;
+
 
 	// TODO: Practical Bonus Desc Final
 	// Objective: to create a set of spring and hibernate services to retrieve data from a new table call "trx_covid_cases_bonus"
@@ -92,7 +90,7 @@ public class CovidBonusController {
 
 	@GetMapping(ADD_COVID_BONUS)
 	CovidCasesBonus addCovidBonus(@RequestParam(required = true) String desc) throws Exception {
-		log.info("addCovid() started={}", desc);
+		log.info("addCovidBonus() started={}", desc);
 		CovidCasesBonus covidCasesBonus = null;
 		try {
 
@@ -103,7 +101,7 @@ public class CovidBonusController {
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			log.error("add() exception " + e.getMessage());
+			log.error("addCovidBonus() exception " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 
@@ -113,7 +111,7 @@ public class CovidBonusController {
 	//Delete function
 	@DeleteMapping(DELETE_COVID_BONUS)
 	int deleteCovidBonus(@RequestParam(required = true) long id) throws Exception {
-		log.info("deleteCovid() started id={}", id);
+		log.info("deleteCovidBonus() started id={}", id);
 		try {
 			return covidBonusService.deleteCovidBonus(id);
 			
@@ -138,7 +136,27 @@ public class CovidBonusController {
 	
     @DeleteMapping(DELETE_COVID_SOAPUI_BONUS)
     public List<CovidCasesBonus>deleteCovidSoapBonus(@RequestParam(required = true) String desc)throws Exception{
-		return covidBonusService.deleteCovidBonus(desc);
+		return covidBonusService.deleteCovidBonusDescription(desc);
+	}
+    
+    
+    @DeleteMapping(DELETE_DUPLICATE)
+    List<String> findDuplicateNdelete() throws Exception {
+    	log.info("findDuplicateNdelete() started");
+		
+		// complete the implementation below
+		// ensure logic related to repo move to service implementation
+    	//return covidBonusService.findDuplicateNdelete();
+		List<String> e = covidBonusService.deleteDuplicateRecord();
+		
+		for (String s: e) {
+			log.info ("Duplicate value found on Description Table--->" + s);
+			log.info ("Value Deleted--->" + s);
+			covidBonusService.deleteCovidBonusDescription(s);
+		}
+		
+		log.info("findDuplicateNdelete() ended");
+		return e;
 	}
 
 }

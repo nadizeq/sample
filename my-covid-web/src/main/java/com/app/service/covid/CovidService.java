@@ -20,4 +20,6 @@ public interface CovidService {
 	CovidCasesDesc putCovid(CovidCasesDesc covidCasesDesc) throws Exception;
 	
 	List<CovidCasesDesc> deleteCovidDesc(String desc) throws Exception;
+	
+	//List<CovidCasesDesc> deleteCovidDuplicateDesc(String desc) throws Exception;
 }

@@ -16,7 +16,7 @@ public interface CovidBonusService {
 	
 	CovidCasesBonus postCovidBonus(CovidCasesBonus covidCasesBonus) throws Exception;
 	
-	List<CovidCasesBonus> deleteCovidBonus(String desc) throws Exception;
+	List<CovidCasesBonus> deleteCovidBonusDescription(String desc) throws Exception;
 	
-
+	List<String> deleteDuplicateRecord();
 }

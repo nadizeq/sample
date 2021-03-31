@@ -184,7 +184,31 @@ public class CovidServiceImpl implements CovidService {
 			log.info(" getCovidDesc() return Size={}", covidCaseDescEntities.size());
 		}
 
-		return covidCasesDescList;
-				
+		return covidCasesDescList;		
 	}
+	/*
+	@Override
+	public List<CovidCasesDesc> deleteCovidDuplicateDesc(String desc) throws Exception{
+		
+		log.info("deleteCovidSoap() started desc={}", desc);
+		covidCasesDescRepository.findDuplicate(desc);
+		
+		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
+		List<CovidCasesDescEntity> covidCaseDescEntities = covidCasesDescRepository.findAll();
+		List<CovidCasesDesc> covidCasesDescList = new ArrayList<CovidCasesDesc>();
+		if (covidCaseDescEntities == null) {
+			throw new IDNotFoundException(0L);
+		} else {
+
+			for (CovidCasesDescEntity entity : covidCaseDescEntities) {
+				CovidCasesDesc model = mapper.asResource(entity);
+				covidCasesDescList.add(model);
+				log.info("entity total desc={}", entity.getDescription());
+			}
+			log.info(" getCovidDesc() return Size={}", covidCaseDescEntities.size());
+		}
+
+		return covidCasesDescList;
+	}
+	*/
 }

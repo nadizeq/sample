@@ -11,16 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.entity.CovidCasesDescEntity;
-import com.app.mapper.CovidAreaDescMapper;
 import com.app.model.CovidCasesArea;
 import com.app.model.CovidCasesDesc;
 import com.app.repository.covid.CovidCasesDescRepository;
 import com.app.service.covid.CovidService;
-import com.app.service.covid.CovidServiceImpl;
 import com.app.service.covid.api.CovidMiningAPITotalCases;
 
-import fr.xebia.extras.selma.Selma;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -47,7 +43,7 @@ public class CovidController {
 	
 	private final static String DELETE_COVID_SOAPUI="/covid/deletesoap";
 	
-	//private final static String DELETE_DUPLICATE="/covid";
+	private final static String DELETE_DUPLICATE="/covid/deleteduplicate";
 
 	@Autowired
 	private CovidService covidService;
@@ -191,5 +187,23 @@ public class CovidController {
     public List<CovidCasesDesc>deleteCovidSoap(@RequestParam(required = true) String desc)throws Exception{
 		return covidService.deleteCovidDesc(desc);
 	}
+    /*
+    @DeleteMapping(DELETE_DUPLICATE)
+    public List<CovidCasesDesc>deleteCovidDuplicate(@RequestParam(required = true) String desc)throws Exception{
+    	log.info("findDuplicateNdelete() started");
+		
+		// complete the implementation below
+		// ensure logic related to repo move to service implementation
+		List<String> e = covidCasesDescRepository.findDuplicateNdelete();
+		
+		for (String s: e) {
+			log.info ("Duplicate value found on Description Table--->" + s);
+			log.info ("Value Deleted--->" + s);
+		}
+		
+		log.info("findDuplicateNdelete() ended");
+		return null;
+	}*/
+    
 
 }

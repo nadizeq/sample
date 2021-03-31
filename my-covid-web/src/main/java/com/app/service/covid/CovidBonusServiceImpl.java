@@ -10,27 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.entity.CovidCasesBonusEntity;
-import com.app.entity.CovidCasesDescEntity;
 import com.app.error.IDNotFoundException;
 import com.app.mapper.CovidAreaBonusMapper;
-import com.app.mapper.CovidAreaDescMapper;
 import com.app.model.CovidCasesBonus;
-import com.app.model.CovidCasesDesc;
 import com.app.repository.covid.CovidCasesBonusRepository;
+
 import fr.xebia.extras.selma.Selma;
+import jdk.internal.org.jline.utils.Log;
+import lombok.extern.slf4j.Slf4j;
 
 //TODO: Practical bonus final
 //complete this as Dependencies Injection Service
-
+@Slf4j
 @Service
 @Transactional
 public class CovidBonusServiceImpl implements CovidBonusService {
 
 	// hint
 	// the method is similar to getCovidDesc() CovidServiceImpl file
-	
-	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CovidBonusServiceImpl.class);
-	
+		
 	@Autowired 
 	CovidCasesBonusRepository covidCasesBonusRepository;
 	
@@ -128,17 +126,11 @@ public class CovidBonusServiceImpl implements CovidBonusService {
 	//post method
 	public CovidCasesBonus postCovidBonus(CovidCasesBonus covidCasesBonus) throws Exception{
 		log.info("postCovid() starts, covidCasesDesc={}",covidCasesBonus);
-		try {
-			CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
-	    	CovidCasesBonusEntity covidCasesBonusEntity= mapper.asEntity(covidCasesBonus);
-	    	CovidCasesBonusEntity savedEntity = covidCasesBonusRepository.save(covidCasesBonusEntity);
-	    	covidCasesBonus = mapper.asResource(savedEntity);
+		CovidAreaBonusMapper mapper = Selma.builder(CovidAreaBonusMapper.class).build();
+	    CovidCasesBonusEntity covidCasesBonusEntity= mapper.asEntity(covidCasesBonus);
+	    CovidCasesBonusEntity savedEntity = covidCasesBonusRepository.save(covidCasesBonusEntity);
+	    covidCasesBonus = mapper.asResource(savedEntity);
 			
-		}catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.error("postCovidBonus() exception " + e.getMessage());
-			throw new Exception(e.getMessage());
-		}
 		log.info("postCovidBonus() end, covidCasesBonus={}",covidCasesBonus);
     	return covidCasesBonus;
 		
@@ -146,7 +138,7 @@ public class CovidBonusServiceImpl implements CovidBonusService {
 	
 	//delete by description
 	@Override
-	public List<CovidCasesBonus> deleteCovidBonus(String desc) throws Exception{
+	public List<CovidCasesBonus> deleteCovidBonusDescription(String desc) throws Exception{
 		
 		log.info("deleteCovidSoap() started desc={}", desc);
 		covidCasesBonusRepository.deleteBonusDescWithCondition(desc);
@@ -168,5 +160,15 @@ public class CovidBonusServiceImpl implements CovidBonusService {
 
 		return covidCasesBonusList;
 				
+	}
+	
+	@Override
+	public List<String> deleteDuplicateRecord(){
+		List<String> lists = new ArrayList<String>();
+		lists=covidCasesBonusRepository.findDuplicateNdelete();
+		log.info("lists value={}",lists);
+		
+		return lists;
+		
 	}
 }
