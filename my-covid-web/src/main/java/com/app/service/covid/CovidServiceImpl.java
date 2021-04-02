@@ -38,8 +38,8 @@ public class CovidServiceImpl implements CovidService {
 		log.info("getCovid started");
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
 		List<CovidCasesAreaEntity> covidCaseEntities = covidCasesRepository.findAll();
-		List<CovidCasesArea> covidCasesAreaList = new ArrayList<CovidCasesArea>();
-		if (covidCaseEntities == null) {
+		List<CovidCasesArea> covidCasesAreaList = new ArrayList<>();
+		if (covidCaseEntities.isEmpty() == true) {
 			throw new IDNotFoundException(0L);
 		} else {
 

@@ -21,19 +21,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CovidBonusController {
 
-	private final static String GET_MY_BONUS = "/covid/get/bonus";
+	private static final String GET_MY_BONUS = "/covid/get/bonus";
 	
-	private final static String ADD_COVID_BONUS = "/covid/add/bonus";
+	private static final String ADD_COVID_BONUS = "/covid/add/bonus";
 	
-	private final static String DELETE_COVID_BONUS = "/covid/delete/bonus";
+	private static final String DELETE_COVID_BONUS = "/covid/delete/bonus";
 	
-	private final static String PUT_API_BONUS = "/covid/put/bonus";
+	private static final String PUT_API_BONUS = "/covid/put/bonus";
 	
-	private final static String POST_API_BONUS = "/covid/post/bonus";
+	private static final String POST_API_BONUS = "/covid/post/bonus";
 	
-	private final static String DELETE_COVID_SOAPUI_BONUS="/covid/deletesoap/bonus";
+	private static final String DELETE_COVID_SOAPUI_BONUS="/covid/deletesoap/bonus";
 	
-	private final static String DELETE_DUPLICATE="/covid/deleteduplicate/bonus";
+	private static final String DELETE_DUPLICATE="/covid/deleteduplicate/bonus";
 
 
 	@Autowired
@@ -42,8 +42,6 @@ public class CovidBonusController {
 	@Autowired
 	CovidMiningAPITotalCases covidMiningAPITotalCases;
 
-
-	// TODO: Practical Bonus Desc Final
 	// Objective: to create a set of spring and hibernate services to retrieve data from a new table call "trx_covid_cases_bonus"
 	
 	// 1. Complete the CovidCasesBonusEntity.java and auto generate a table on DB
@@ -67,19 +65,18 @@ public class CovidBonusController {
 	
 	//retrieve data in table
 	@GetMapping(GET_MY_BONUS)
-	List<CovidCasesBonus> bonus() throws Exception {
+	public List<CovidCasesBonus> bonus() throws Exception {
 		List<CovidCasesBonus> covidCasesBonus = null;
 		log.info("bonus() started");
 
 		try {
 			covidCasesBonus = covidBonusService.bonus();
 			if (covidCasesBonus == null) {
-				throw new Exception("No bonus yet");
+				throw new com.app.error.ControllerException(GET_MY_BONUS, "No bonus yet");
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.error("bonus() exception " + e.getMessage());
-			throw new Exception(e);
+			log.error("mining() exception " + e.getMessage());
+			throw new com.app.error.ControllerException(GET_MY_BONUS, e.getMessage());
 		}
 
 		log.info(GET_MY_BONUS + " return = {}" + covidCasesBonus);
@@ -89,7 +86,7 @@ public class CovidBonusController {
 	//Add function
 
 	@GetMapping(ADD_COVID_BONUS)
-	CovidCasesBonus addCovidBonus(@RequestParam(required = true) String desc) throws Exception {
+	public CovidCasesBonus addCovidBonus(@RequestParam(required = true) String desc){
 		log.info("addCovidBonus() started={}", desc);
 		CovidCasesBonus covidCasesBonus = null;
 		try {
@@ -100,9 +97,8 @@ public class CovidBonusController {
 			covidCasesBonus = covidBonusService.addCovidBonus(desc);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			log.error("addCovidBonus() exception " + e.getMessage());
-			throw new Exception(e.getMessage());
+			throw new com.app.error.ControllerException(ADD_COVID_BONUS, e.getMessage());
 		}
 
 		return covidCasesBonus;
@@ -110,23 +106,22 @@ public class CovidBonusController {
 	
 	//Delete function
 	@DeleteMapping(DELETE_COVID_BONUS)
-	int deleteCovidBonus(@RequestParam(required = true) long id) throws Exception {
+	public int deleteCovidBonus(@RequestParam(required = true) long id) throws Exception {
 		log.info("deleteCovidBonus() started id={}", id);
 		try {
 			return covidBonusService.deleteCovidBonus(id);
 			
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			log.error("add() exception " + e.getMessage());
-			throw new Exception(e.getMessage());
+			throw new com.app.error.ControllerException(DELETE_COVID_BONUS, e.getMessage());
 		}
 	}
 	
 	//Update record using put request method
 	@PutMapping(PUT_API_BONUS)
-	CovidCasesBonus putCovidBonus(@RequestBody CovidCasesBonus covidCasesBonus) throws Exception {
+	public CovidCasesBonus putCovidBonus(@RequestBody CovidCasesBonus covidCasesBonus) throws Exception {
 
-	return covidBonusService.putCovidBonus(covidCasesBonus);
+		return covidBonusService.putCovidBonus(covidCasesBonus);
 	}
 	
 	@PostMapping(POST_API_BONUS)

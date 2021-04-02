@@ -43,7 +43,7 @@ public class CovidController {
 	
 	private final static String DELETE_COVID_SOAPUI="/covid/deletesoap";
 	
-	private final static String DELETE_DUPLICATE="/covid/deleteduplicate";
+	private final static String DELETE_DESCRIPTION="/covid/deleteDesc";
 
 	@Autowired
 	private CovidService covidService;
@@ -204,6 +204,13 @@ public class CovidController {
 		log.info("findDuplicateNdelete() ended");
 		return null;
 	}*/
+    
+    @DeleteMapping(DELETE_DESCRIPTION)
+    public int DeleteDesc(String desc) {
+    	
+    	int deleted = covidCasesDescRepository.deleteDescWithConditionStatus(desc);
+		return deleted;
+    }
     
 
 }
