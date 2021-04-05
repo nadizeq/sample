@@ -1,0 +1,6 @@
+projectKey=nadizeq-java
+serverUrl=http://139.99.33.99:9000
+serverVersion=8.7.0.41497
+dashboardUrl=http://139.99.33.99:9000/dashboard?id=nadizeq-java
+ceTaskId=AXigDhT8vpgu-OZZN19R
+ceTaskUrl=http://139.99.33.99:9000/api/ce/task?id=AXigDhT8vpgu-OZZN19R

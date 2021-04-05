@@ -16,30 +16,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MyCovidController {
 
-	private final static String GET_MY_LAST_5_COVID = "/covid/get5/my";
+	private static final String GET_MY_LAST_5_COVID = "/covid/get5/my";
 	
-	private final static String GET_MY_LAST_5_COVID_PARAM = "/covid/get5/withsize";
+	private static final String GET_MY_LAST_5_COVID_PARAM = "/covid/get5/withsize";
 
 	@Autowired
 	CovidMiningAPITotalCases covidMiningAPITotalCases;
 
 	@GetMapping(GET_MY_LAST_5_COVID)
-	List<CovidCasesArea> getLast5Records() throws Exception {
+	public List<CovidCasesArea> getLast5Records(){
 		log.info("getLast5Records() started");
 
 		log.info(
 				"getLast5Records() ends. It supposes to return last 5 records from listLast5Records(). (CovidCasesRepository)");
 		return covidMiningAPITotalCases.getLast5RecordsMY();
 	}
-	
-	// TODO: Practical Bonus Desc 3 :
 		// The method below acceping parameter 
 		// complete the getLast5RecordsMYWithSize on covidMiningAPITotalCases
 		// http://localhost:8081/covid/get5/withsize?size=1
 		// Reference - https://howtodoinjava.com/spring-boot2/pagination-sorting-example/
 		
 		@GetMapping(GET_MY_LAST_5_COVID_PARAM)
-		List<CovidCasesArea> getLast5RecordsWithParam(@RequestParam int size) throws Exception {
+		public List<CovidCasesArea> getLast5RecordsWithParam(@RequestParam int size){
 			log.info("getLast5RecordsWithParam() started size ={}", size);
 
 			log.info(

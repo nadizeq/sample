@@ -8,9 +8,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-//TODO: Practical bonus final
-
-//complete this as new CovidCasesBonusEntity
 @Entity
 @Table(name = "trx_covid_cases_bonus")
 @Getter

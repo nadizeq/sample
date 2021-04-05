@@ -15,19 +15,16 @@ public class MyCovidMiningController {
 
 
 	
-	private final static String MINING_MY_COVID = "/covid/mining/my";
+	private static final String MINING_MY_COVID = "/covid/mining/my";
 	
 	@Autowired
 	CovidMiningAPITotalCases covidMiningAPITotalCases;
 	
 	@Autowired
 	CovidMiningApiTotalCasesImpl covidMiningApiTotalCasesImpl;
-	
-	// TODO: Practical 5, move the required logic from covid-web project to here
-	
-	// CovidMiningApiTotalCasesImpl need to be fixed too. Refer to the file TODO remarks
+		
 	@GetMapping(MINING_MY_COVID)
-	String mining() throws Exception {
+	public String mining(){
 		log.info("mining() started");
 		String strReturn = null;
 
@@ -35,9 +32,8 @@ public class MyCovidMiningController {
 			covidMiningAPITotalCases.doMining();
 			strReturn = covidMiningAPITotalCases.getTotalfromDB();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			log.error("mining() exception " + e.getMessage());
-			throw new Exception(e);
+			throw new com.app.error.ControllerException(MINING_MY_COVID, e.getMessage());
 		}
 
 		log.info(MINING_MY_COVID + " return = {}" + strReturn);

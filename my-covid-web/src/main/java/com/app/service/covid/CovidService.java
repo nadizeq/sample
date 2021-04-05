@@ -2,6 +2,7 @@ package com.app.service.covid;
 
 import java.util.List;
 
+import com.app.error.GeneralException;
 import com.app.model.CovidCasesArea;
 import com.app.model.CovidCasesDesc;
 
@@ -13,13 +14,12 @@ public interface CovidService {
 
 	CovidCasesDesc addCovid(String desc);
 	
-	int deleteCovid(Long id) throws Exception;
+	int deleteCovid(Long id) throws GeneralException;
 	
-	CovidCasesDesc postCovid(CovidCasesDesc covidCasesDesc) throws Exception;
+	CovidCasesDesc postCovid(CovidCasesDesc covidCasesDesc) throws GeneralException;
 	
-	CovidCasesDesc putCovid(CovidCasesDesc covidCasesDesc) throws Exception;
+	CovidCasesDesc putCovid(CovidCasesDesc covidCasesDesc) throws GeneralException;
 	
-	List<CovidCasesDesc> deleteCovidDesc(String desc) throws Exception;
+	List<CovidCasesDesc> deleteCovidDesc(String desc);
 	
-	//List<CovidCasesDesc> deleteCovidDuplicateDesc(String desc) throws Exception;
 }

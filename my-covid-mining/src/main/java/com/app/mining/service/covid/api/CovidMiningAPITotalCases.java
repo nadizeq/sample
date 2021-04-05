@@ -2,8 +2,8 @@ package com.app.mining.service.covid.api;
 
 public interface CovidMiningAPITotalCases {
 	
-	String doMining() throws Exception;
+	void doMining();
 
-	String getTotalfromDB() throws Exception;
+	String getTotalfromDB();
 
 }

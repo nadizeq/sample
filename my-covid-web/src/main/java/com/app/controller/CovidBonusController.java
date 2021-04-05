@@ -65,7 +65,7 @@ public class CovidBonusController {
 	
 	//retrieve data in table
 	@GetMapping(GET_MY_BONUS)
-	public List<CovidCasesBonus> bonus() throws Exception {
+	public List<CovidCasesBonus> bonus(){
 		List<CovidCasesBonus> covidCasesBonus = null;
 		log.info("bonus() started");
 
@@ -106,7 +106,7 @@ public class CovidBonusController {
 	
 	//Delete function
 	@DeleteMapping(DELETE_COVID_BONUS)
-	public int deleteCovidBonus(@RequestParam(required = true) long id) throws Exception {
+	public int deleteCovidBonus(@RequestParam(required = true) long id){
 		log.info("deleteCovidBonus() started id={}", id);
 		try {
 			return covidBonusService.deleteCovidBonus(id);
@@ -119,30 +119,29 @@ public class CovidBonusController {
 	
 	//Update record using put request method
 	@PutMapping(PUT_API_BONUS)
-	public CovidCasesBonus putCovidBonus(@RequestBody CovidCasesBonus covidCasesBonus) throws Exception {
+	public CovidCasesBonus putCovidBonus(@RequestBody CovidCasesBonus covidCasesBonus){
 
 		return covidBonusService.putCovidBonus(covidCasesBonus);
 	}
 	
 	@PostMapping(POST_API_BONUS)
-	public CovidCasesBonus postCovidBonus(@RequestBody CovidCasesBonus covidCasesBonus) throws Exception {
+	public CovidCasesBonus postCovidBonus(@RequestBody CovidCasesBonus covidCasesBonus){
 		return covidBonusService.postCovidBonus(covidCasesBonus);
 	}
 	
     @DeleteMapping(DELETE_COVID_SOAPUI_BONUS)
-    public List<CovidCasesBonus>deleteCovidSoapBonus(@RequestParam(required = true) String desc)throws Exception{
+    public List<CovidCasesBonus>deleteCovidSoapBonus(@RequestParam(required = true) String desc){
 		return covidBonusService.deleteCovidBonusDescription(desc);
 	}
     
     
     @DeleteMapping(DELETE_DUPLICATE)
-    List<String> findDuplicateNdelete() throws Exception {
+    public List<String> findDuplicateNdelete(){
     	log.info("findDuplicateNdelete() started");
 		
 		// complete the implementation below
 		// ensure logic related to repo move to service implementation
-    	//return covidBonusService.findDuplicateNdelete();
-		List<String> e = covidBonusService.deleteDuplicateRecord();
+		List<String> e = covidBonusService.duplicateRecord();
 		
 		for (String s: e) {
 			log.info ("Duplicate value found on Description Table--->" + s);

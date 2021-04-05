@@ -1,7 +1,5 @@
 package com.app.service.covid.api;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.app.entity.CovidCasesAreaEntity;
+import com.app.error.GeneralException;
 import com.app.mapper.CovidCasesAreaMapper;
 import com.app.model.CovidCasesArea;
 import com.app.model.api.Covid19ApiModel;
 import com.app.repository.covid.CovidCasesRepository;
-
 
 import fr.xebia.extras.selma.Selma;
 import lombok.extern.slf4j.Slf4j;
@@ -27,34 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 
-	private final static String API_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
 	@Autowired
 	CovidCasesRepository covidCasesRepository;
-
-	@SuppressWarnings("unused")
-	private Boolean isDuplicate(List<CovidCasesAreaEntity> covidCasesAreaEntities, Covid19ApiModel covid19ApiModel) {
-
-		log.info("isDuplicate Starts. covid19ApiModel={}", covid19ApiModel);
-
-		for (CovidCasesAreaEntity covidCasesAreaEntity : covidCasesAreaEntities) {
-
-			Format formatter = new SimpleDateFormat(API_DATE_FORMAT);
-			String convertedDate = formatter.format(covidCasesAreaEntity.getDate());
-
-			log.info("api date='{}' , entity date='{}'", covid19ApiModel.getDate(), convertedDate);
-
-			if (convertedDate.equals(covid19ApiModel.getDate())) {
-				log.info("is matched");
-				return true;
-			} else {
-				log.info("is not matched");
-			}
-
-		}
-		log.info("isDuplicate Ends. nothing Duplicated here");
-		return false;
-	}
 
 	private int getCasesDifferent(List<Covid19ApiModel> covid19ApiModels) {
 		Covid19ApiModel first = covid19ApiModels.get(0);
@@ -62,19 +34,19 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 
 		log.info("first cases ={}, last cases= {} ", first.getCases(), last.getCases());
 
-		int totalCases = last.getCases() - first.getCases();
+		return last.getCases() - first.getCases();
 
-		return totalCases;
+		
 
 	}
 
 	@Override
-	public List<CovidCasesArea> getLast5RecordsMY() throws Exception {		
+	public List<CovidCasesArea> getLast5RecordsMY(){		
 		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast5RecordsHQL();
 
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
 
-		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+		List<CovidCasesArea> casesPojos = new ArrayList<>();
 		for (CovidCasesAreaEntity covidCasesAreaEntity : casesEntities) {
 			CovidCasesArea covidCasesArea = mapper.asResource(covidCasesAreaEntity);
 			casesPojos.add(covidCasesArea);
@@ -87,22 +59,21 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 	}
 
 	@Override
-	public List<CovidCasesArea> getLast5RecordsMYWithSize(int size) throws Exception {
+	public List<CovidCasesArea> getLast5RecordsMYWithSize(int size) throws GeneralException{
 
-		// TODO: Practical bonus 3:
 		// complete the code here as getLast5RecordsMY method
 		Pageable page = PageRequest.of(0, 2);
 		List<CovidCasesAreaEntity> list =covidCasesRepository.listLast5RecordsHQLWithSize(page);
 		CovidCasesAreaMapper mapper = Selma.builder(CovidCasesAreaMapper.class).build();
 
-		List<CovidCasesArea> casesPojos = new ArrayList<CovidCasesArea>();
+		List<CovidCasesArea> casesPojos = new ArrayList<>();
 		for (CovidCasesAreaEntity covidCasesAreaEntity : list) {
 			CovidCasesArea covidCasesArea = mapper.asResource(covidCasesAreaEntity);
 			casesPojos.add(covidCasesArea);
 		}
 
-		if (casesPojos.size() == 0) {
-			throw new Exception("query return nothing!");
+		if (casesPojos.isEmpty()) {
+			throw new GeneralException("query return nothing!");
 		}
 		
 		log.info("getLast5RecordsMYWithSize ends.");
@@ -110,7 +81,7 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 	}
 
 	@Override
-	public String getTotalfromDB() throws Exception {
+	public String getTotalfromDB(){
 		log.info("getTotalfromDB starts. ");
 		List<CovidCasesAreaEntity> casesEntities = covidCasesRepository.listLast2Records();
 		log.info("getTotalfromDB casesEntities size ={} ", casesEntities.size());
@@ -118,7 +89,7 @@ public class CovidMiningApiTotalCasesImpl implements CovidMiningAPITotalCases {
 		int totalCases = 0;
 		String date = "";
 		if (!casesEntities.isEmpty()) {
-			List<Covid19ApiModel> covidApiModels = new ArrayList<Covid19ApiModel>();
+			List<Covid19ApiModel> covidApiModels = new ArrayList<>();
 
 			CovidCasesAreaEntity covidCasesAreaEntity = casesEntities.get(1);
 			log.info("getTotalfromDB Last covidCasesAreaEntity date={}, cases={}", covidCasesAreaEntity.getDate(),

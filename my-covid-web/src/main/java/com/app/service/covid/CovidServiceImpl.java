@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app.error.GeneralException;
 import com.app.error.IDNotFoundException;
 import com.app.mapper.CovidAreaDescMapper;
 import com.app.mapper.CovidCasesAreaMapper;
@@ -60,7 +61,7 @@ public class CovidServiceImpl implements CovidService {
 		log.info("getCovidDesc started");
 		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
 		List<CovidCasesDescEntity> covidCaseDescEntities = covidCasesDescRepository.findAll();
-		List<CovidCasesDesc> covidCasesDescList = new ArrayList<CovidCasesDesc>();
+		List<CovidCasesDesc> covidCasesDescList = new ArrayList<>();
 		if (covidCaseDescEntities == null) {
 			throw new IDNotFoundException(0L);
 		} else {
@@ -77,7 +78,6 @@ public class CovidServiceImpl implements CovidService {
 
 	}
 	
-	// TODO: Related to Practical 4 (Add)
 	@Override
 	public CovidCasesDesc addCovid(String desc) {
 		log.info("addCovid started");
@@ -97,16 +97,15 @@ public class CovidServiceImpl implements CovidService {
 
 	}
 
-	// TODO: Related to Practical 4 (Delete)
 	@Override
-	public int deleteCovid(Long id) throws Exception {
+	public int deleteCovid(Long id) throws GeneralException{
 		log.info("deleteCovid started");
 		
 		try {
 
 			Optional<CovidCasesDescEntity> entityOptional = covidCasesDescRepository.findById(id);
 
-			log.info("Entity found == " + entityOptional.isPresent());
+			log.info("Entity found == {}" , entityOptional.isPresent());
 
 			if (entityOptional.isPresent()) {
 				CovidCasesDescEntity covidAreaDescEntity = entityOptional.get();
@@ -115,9 +114,7 @@ public class CovidServiceImpl implements CovidService {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.error("deleteCovid() exception " + e.getMessage());
-			throw new Exception(e.getMessage());
+			throw new GeneralException(e.getMessage());
 		}
 		
 		return 0;
@@ -125,7 +122,7 @@ public class CovidServiceImpl implements CovidService {
 	}
 	
 	@Override
-	public CovidCasesDesc putCovid(CovidCasesDesc covidCasesDesc) throws Exception {
+	public CovidCasesDesc putCovid(CovidCasesDesc covidCasesDesc) throws GeneralException{
 		log.info("putCovid() started, covidCasesDesc={}", covidCasesDesc);
 		try {
 			CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
@@ -135,9 +132,7 @@ public class CovidServiceImpl implements CovidService {
 			covidCasesDesc = mapper.asResource(savedEntity);
 			
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.error("deleteCovid() exception " + e.getMessage());
-			throw new Exception(e.getMessage());
+			throw new GeneralException(e.getMessage());
 		}
 
 		log.info("putCovid() ends, covidCasesDescSaved={}", covidCasesDesc);
@@ -145,7 +140,7 @@ public class CovidServiceImpl implements CovidService {
 		
 	}
 	@Override
-	public CovidCasesDesc postCovid(CovidCasesDesc covidCasesDesc) throws Exception{
+	public CovidCasesDesc postCovid(CovidCasesDesc covidCasesDesc) throws GeneralException{
 		log.info("postCovid() starts, covidCasesDesc={}",covidCasesDesc);
 		try {
 			CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
@@ -154,9 +149,7 @@ public class CovidServiceImpl implements CovidService {
 	    	covidCasesDesc = mapper.asResource(savedEntity);
 			
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.error("deleteCovid() exception " + e.getMessage());
-			throw new Exception(e.getMessage());
+			throw new GeneralException(e.getMessage());
 		}
 		log.info("postCovid() end, covidCasesDesc={}",covidCasesDesc);
     	return covidCasesDesc;
@@ -164,51 +157,30 @@ public class CovidServiceImpl implements CovidService {
 	}
 	
 	@Override
-	public List<CovidCasesDesc> deleteCovidDesc(String desc) throws Exception{
+	public List<CovidCasesDesc> deleteCovidDesc(String desc){
 		
 		log.info("deleteCovidSoap() started desc={}", desc);
-		covidCasesDescRepository.deleteDescWithCondition(desc);
-		
-		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
-		List<CovidCasesDescEntity> covidCaseDescEntities = covidCasesDescRepository.findAll();
-		List<CovidCasesDesc> covidCasesDescList = new ArrayList<CovidCasesDesc>();
-		if (covidCaseDescEntities == null) {
-			throw new IDNotFoundException(0L);
-		} else {
+		try {
+			covidCasesDescRepository.deleteDescWithCondition(desc);
+			
+			CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
+			List<CovidCasesDescEntity> covidCaseDescEntities = covidCasesDescRepository.findAll();
+			List<CovidCasesDesc> covidCasesDescList = new ArrayList<>();
+			if (covidCaseDescEntities == null) {
+				throw new IDNotFoundException(0L);
+			} else {
 
-			for (CovidCasesDescEntity entity : covidCaseDescEntities) {
-				CovidCasesDesc model = mapper.asResource(entity);
-				covidCasesDescList.add(model);
-				log.info("entity total desc={}", entity.getDescription());
+				for (CovidCasesDescEntity entity : covidCaseDescEntities) {
+					CovidCasesDesc model = mapper.asResource(entity);
+					covidCasesDescList.add(model);
+					log.info("entity total desc={}", entity.getDescription());
+				}
+				log.info(" getCovidDesc() return Size={}", covidCaseDescEntities.size());
 			}
-			log.info(" getCovidDesc() return Size={}", covidCaseDescEntities.size());
-		}
-
-		return covidCasesDescList;		
+			return covidCasesDescList;	
+			
+		}catch (Exception e) {
+			throw new GeneralException(e.getMessage());
+		}	
 	}
-	/*
-	@Override
-	public List<CovidCasesDesc> deleteCovidDuplicateDesc(String desc) throws Exception{
-		
-		log.info("deleteCovidSoap() started desc={}", desc);
-		covidCasesDescRepository.findDuplicate(desc);
-		
-		CovidAreaDescMapper mapper = Selma.builder(CovidAreaDescMapper.class).build();
-		List<CovidCasesDescEntity> covidCaseDescEntities = covidCasesDescRepository.findAll();
-		List<CovidCasesDesc> covidCasesDescList = new ArrayList<CovidCasesDesc>();
-		if (covidCaseDescEntities == null) {
-			throw new IDNotFoundException(0L);
-		} else {
-
-			for (CovidCasesDescEntity entity : covidCaseDescEntities) {
-				CovidCasesDesc model = mapper.asResource(entity);
-				covidCasesDescList.add(model);
-				log.info("entity total desc={}", entity.getDescription());
-			}
-			log.info(" getCovidDesc() return Size={}", covidCaseDescEntities.size());
-		}
-
-		return covidCasesDescList;
-	}
-	*/
 }
